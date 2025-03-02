@@ -71,9 +71,10 @@ class ArticlePart {
 class _AppState extends State<App> {
   List<Article> articles = [];
   int? pageId;
+  String updateUrl = "localhost:6363";
 
   Future<void> update() async {
-    //var response = await http.get(Uri.https("localhost:6363"));
+    //var response = await http.get(Uri.https(updateUrl));
     articles = Article.fromJson(
       "[{\"url\":\"localhost:636\",\"title\":\"Title\",\"subtitle\":\"Subtitle\",\"image\":\"https://miro.medium.com/v2/resize:fit:1280/format:webp/1*uyZqUA7yQuJYrHtuDv49Rw.jpeg\",\"parts\":[{\"text\": \"First \"},{\"text\":\"Second\",\"annotation\":\"Annotation\",\"sources\":[\"https://nytimes.com\"]}]}]",
     );
@@ -95,8 +96,19 @@ class _AppState extends State<App> {
       });
     }
 
+    void setUpdateUrl(String url) {
+      setState(() {
+        updateUrl = url;
+      });
+    }
+
     if (pageId == null) {
-      page = HomePage(articles: articles, rebuild: rebuild);
+      page = HomePage(
+        articles: articles,
+        setUpdateUrl: setUpdateUrl,
+        updateUrl: updateUrl,
+        rebuild: rebuild,
+      );
     } else {
       page = ArticlePage(article: articles[pageId!], rebuild: rebuild);
     }
@@ -156,7 +168,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                     return AlertDialog(
                                       title: Text(
                                         part.annotation!,
-                                        style: TextStyle(fontSize: 22),
+                                        style: TextStyle(fontSize: 18),
                                       ),
                                       content: Text(
                                         part.sources?.join("\n") ?? "",
@@ -184,9 +196,17 @@ class _ArticlePageState extends State<ArticlePage> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.rebuild, required this.articles});
+  const HomePage({
+    super.key,
+    required this.rebuild,
+    required this.setUpdateUrl,
+    required this.updateUrl,
+    required this.articles,
+  });
 
   final Function(int?) rebuild;
+  final Function(String) setUpdateUrl;
+  final String updateUrl;
   final List<Article> articles;
 
   @override
@@ -196,23 +216,47 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children:
-          widget.articles.map((article) {
-            return Card(
-              child: ListTile(
-                title: Text(article.title, style: TextStyle(fontSize: 20)),
-                subtitle: Text(
-                  article.subtitle,
-                  style: TextStyle(fontSize: 16),
-                ),
-                leading: article.image,
-                onTap: () {
-                  widget.rebuild(widget.articles.indexOf(article));
+    var children = <Widget>[
+      Row(
+        children: [
+          Text("Home", style: TextStyle(fontSize: 20)),
+          Spacer(),
+          IconButton.filled(
+            icon: Icon(Icons.settings_rounded),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: TextFormField(
+                      autocorrect: false,
+                      initialValue: widget.updateUrl,
+                      onChanged: (url) {
+                        widget.setUpdateUrl(url);
+                      },
+                    ),
+                  );
                 },
-              ),
-            );
-          }).toList(),
+              );
+            },
+          ),
+        ],
+      ),
+    ];
+    children.addAll(
+      widget.articles.map((article) {
+        return Card(
+          child: ListTile(
+            title: Text(article.title, style: TextStyle(fontSize: 20)),
+            subtitle: Text(article.subtitle, style: TextStyle(fontSize: 16)),
+            leading: article.image,
+            onTap: () {
+              widget.rebuild(widget.articles.indexOf(article));
+            },
+          ),
+        );
+      }),
     );
+    return ListView(children: children);
   }
 }
