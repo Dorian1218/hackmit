@@ -1,12 +1,10 @@
-    body {
-    background-color: blue;
-    background-image: url('https://pics.clipartpng.com/Transparent_Light_Bulb_PNG_Clip_Art-2106.png');
-    background-image: opacity = 0.5;
-    background-position: center;
+body {
+    background-color: darkgoldenrod;
+    background-color: black;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    color: black;
-    font-family: 'Times new Roman', sans-serif;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     text-align: center;
  }
  
