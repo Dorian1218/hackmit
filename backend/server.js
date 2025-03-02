@@ -18,7 +18,7 @@ app.post('/api/analyze', async (req, res) => {
     const genAI = new google.GoogleGenerativeAI("AIzaSyDPdHzqj9t-QU6wBXLtETggAG9-GgxOsLU");
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         
-    const prompt = "Take the following text and check if for potential bias: " + text;
+    const prompt = "Take the following text and check if for potential bias: " + text + "if the text inputted is not an article, please return: 'This is not an article' and do not analyze it for bias.";
         
     const result = await model.generateContent(prompt);
     res.json({result: result.response.text()});

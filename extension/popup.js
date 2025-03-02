@@ -1,4 +1,5 @@
 document.getElementById('analyzeButton').addEventListener('click', () => {
+  document.getElementById('result').innerHTML = 'Analyzing...';
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.tabs.sendMessage(tabs[0].id, { action: 'analyze' }, (response) => {
       if (response && response?.result) {

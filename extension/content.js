@@ -15,6 +15,9 @@ async function checkBias(text, sendResponse) {
         body: JSON.stringify({ text: text })
     });
     const result = await response.json();
-    console.log(result.result)
-    await sendResponse({ result: result.result});
+    let formattedText = result.result
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/(?<!\*)\*(?!\*)/g, '<br><br>')
+
+    await sendResponse({ result: formattedText});
 }

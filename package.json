@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@google/generative-ai": "^0.22.0",
-    "@tensorflow-models/toxicity": "^1.2.2"
+    "@google/generative-ai": "^0.22.0"
   }
 }

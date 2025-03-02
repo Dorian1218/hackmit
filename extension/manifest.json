@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Fake News & Bias Detector",
-  "description": "Detect fake news and bias in news articles.",
+  "name": "ClearView",
+  "description": "Detect bias in news articles.",
   "version": "1.0",
   "permissions": [
     "activeTab",
