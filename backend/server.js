@@ -1,4 +1,4 @@
-
+const google = require("@google/generative-ai");
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
@@ -12,23 +12,16 @@ app.use(express.json());
 app.use(cors());
 
 
-async function checkFakeNews(content) {
-  // const response = await axios.post('https://api.gemini.com/analyze', {
-  //   text: content,
-  //   api_key: "AIzaSyDPdHzqj9t-QU6wBXLtETggAG9-GgxOsLU"
-  // });
-  // return response.data;
-  return content;
-}
-
-
 app.post('/api/analyze', async (req, res) => {
   try {
     const { text } = req.body;
-    console.log(text)
-    // const result = await checkFakeNews(text);
-    // res.json(result);
-    // console.log(result)
+    const genAI = new google.GoogleGenerativeAI("AIzaSyDPdHzqj9t-QU6wBXLtETggAG9-GgxOsLU");
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        
+    const prompt = "Take the following text and check if for potential bias: " + text;
+        
+    const result = await model.generateContent(prompt);
+    res.json({result: result.response.text()});
   } catch (error) {
     res.status(500).json({ error: 'Error analyzing the news article' });
   }
