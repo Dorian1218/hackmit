@@ -186,6 +186,9 @@ class _AppState extends State<App> {
     }
 
     void updateArticle(Article a) {
+      if (pageId == null) {
+        return;
+      }
       setState(() {
         articles[pageId!] = a;
       });
@@ -303,6 +306,15 @@ class _ArticlePageState extends State<ArticlePage> {
       },
       child: ListView(
         children: [
+          Align(
+            alignment: Alignment.center,
+            child: TextButton(
+              onPressed: () {
+                widget.rebuild(null);
+              },
+              child: Text("Home", style: TextStyle(fontSize: 22)),
+            ),
+          ),
           Text(
             widget.article.title,
             textAlign: TextAlign.center,
